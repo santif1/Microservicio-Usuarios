@@ -17,6 +17,7 @@ export class UserEntity extends BaseEntity implements UserI {
   roles: RoleEntity[];
 
   get permissionCodes() {
-    return ['create-users', 'list-products'];
+    return this.roles.flatMap(role => role.permissions.map(p => p.name));
   }
+
 }

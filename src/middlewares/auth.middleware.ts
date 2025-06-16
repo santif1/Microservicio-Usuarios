@@ -22,17 +22,27 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
       const request: RequestWithUser = context.switchToHttp().getRequest();
+
+      const authHeader = request.headers.authorization;
+
+      if(!authHeader) throw new UnauthorizedException('No hay token');
+
       const token = request.headers.authorization.replace('Bearer ','');
-      if (token == null) {
-        throw new UnauthorizedException('El token no existe');
-      }
+
+      if (!token) throw new UnauthorizedException('El token no existe');
+      
       const payload = this.jwtService.getPayload(token);
       const user = await this.usersService.findByEmail(payload.email);
       request.user = user;
-      //AGREGAR LOGICA PARA USAR LOS PERMISOS QUE VIENEN EN EL DECORADOR
-      const permissions = this.reflector.get(Permissions, context.getHandler());
-      console.log(permissions)
+      
+      const permissions = this.reflector.get<string[]>(Permissions, context.getHandler());
+      if(!permissions || permissions.length === 0)
       return true;
+
+      const hasPermission = permissions.some((perm)=> user.permissionCodes.includes(perm));
+
+      if (!hasPermission) throw new UnauthorizedException('No tenes permiso para acceder a este recurso')
+
     } catch (error) {
       throw new UnauthorizedException(error?.message);
     }
