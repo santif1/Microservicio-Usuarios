@@ -24,10 +24,6 @@ __decorate([
     __metadata("design:type", String)
 ], PermissionEntity.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", String)
-], PermissionEntity.prototype, "description", void 0);
-__decorate([
     (0, typeorm_1.ManyToMany)(() => roles_entity_1.RoleEntity, role => role.permissions),
     __metadata("design:type", Array)
 ], PermissionEntity.prototype, "roles", void 0);

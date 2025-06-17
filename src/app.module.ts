@@ -8,25 +8,29 @@ import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { UsersModule } from './users/users.module';
+import { MiddlewaresModule } from './middlewares/middleware.module';
+
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-        host: '127.0.0.1',
-        port: 5432,
-        database: 'users',
-        username: 'postgres',
-        password: 'postgres1',
-        synchronize: true,
-        dropSchema: true,
-        entities,
+      host: '127.0.0.1',
+      port: 5434,
+      database: 'users',
+      username: 'postgres',
+      password: 'postgres1',
+      synchronize: true,
+      dropSchema: true,
+      entities,
     }),
     TypeOrmModule.forFeature(entities),
     RolesModule,
     PermissionsModule,
+    UsersModule,
+    MiddlewaresModule
   ],
-  controllers: [AppController,UsersController],
-  providers: [AuthGuard, JwtService, UsersService],
+  controllers: [AppController, UsersController],
 })
 export class AppModule {}

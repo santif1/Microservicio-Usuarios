@@ -8,14 +8,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const user_entity_1 = require("../entities/user.entity");
 const bcrypt_1 = require("bcrypt");
 const jwt_service_1 = require("../jwt/jwt.service");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
 let UsersService = class UsersService {
-    constructor(jwtService) {
+    constructor(userRepository, jwtService) {
+        this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.repository = user_entity_1.UserEntity;
     }
@@ -34,7 +40,7 @@ let UsersService = class UsersService {
             const user = new user_entity_1.UserEntity();
             Object.assign(user, body);
             user.password = (0, bcrypt_1.hashSync)(user.password, 10);
-            await this.repository.save(user);
+            await this.userRepository.save(user);
             return { status: 'created' };
         }
         catch (error) {
@@ -56,12 +62,14 @@ let UsersService = class UsersService {
         };
     }
     async findByEmail(email) {
-        return await this.repository.findOneBy({ email });
+        return await this.userRepository.findOneBy({ email });
     }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_service_1.JwtService])
+    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        jwt_service_1.JwtService])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

@@ -14,7 +14,7 @@ const typeorm_1 = require("typeorm");
 const roles_entity_1 = require("./roles.entity");
 let UserEntity = class UserEntity extends typeorm_1.BaseEntity {
     get permissionCodes() {
-        return ['create-users', 'list-products'];
+        return this.roles.flatMap(role => role.permissions.map(p => p.name));
     }
 };
 exports.UserEntity = UserEntity;

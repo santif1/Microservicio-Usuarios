@@ -6,6 +6,9 @@ import { Payload } from 'src/interfaces/payload';
 
 @Injectable()
 export class JwtService {
+  constructor() {
+    
+  }
   // config.ts
   config = {
     auth: {

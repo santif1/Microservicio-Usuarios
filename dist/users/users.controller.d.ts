@@ -21,4 +21,10 @@ export declare class UsersController {
         accessToken: string;
         refreshToken: string;
     }>;
+    assignRole(): void;
+    canDoMultiple(request: RequestWithUser, body: {
+        permissions: string[];
+    }): {
+        allowed: boolean;
+    };
 }

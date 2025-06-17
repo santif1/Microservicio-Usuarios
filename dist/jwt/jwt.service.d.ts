@@ -1,5 +1,6 @@
 import { Payload } from 'src/interfaces/payload';
 export declare class JwtService {
+    constructor();
     config: {
         auth: {
             secret: string;

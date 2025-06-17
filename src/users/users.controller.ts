@@ -56,4 +56,14 @@ export class UsersController {
   assignRole(){
     
   }
+
+  @Post('can-do')
+  @UseGuards(AuthGuard)
+  canDoMultiple(
+    @Req() request: RequestWithUser,
+    @Body() body: { permissions: string[] }
+    ) {
+    const allowed = body.permissions.every(p => this.service.canDo(request.user, p));
+    return { allowed };
+  }
 }

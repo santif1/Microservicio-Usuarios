@@ -24,16 +24,21 @@ let AuthGuard = class AuthGuard {
     async canActivate(context) {
         try {
             const request = context.switchToHttp().getRequest();
+            const authHeader = request.headers.authorization;
+            if (!authHeader)
+                throw new common_1.UnauthorizedException('No hay token');
             const token = request.headers.authorization.replace('Bearer ', '');
-            if (token == null) {
+            if (!token)
                 throw new common_1.UnauthorizedException('El token no existe');
-            }
             const payload = this.jwtService.getPayload(token);
             const user = await this.usersService.findByEmail(payload.email);
             request.user = user;
             const permissions = this.reflector.get(permissions_decorator_1.Permissions, context.getHandler());
-            console.log(permissions);
-            return true;
+            if (!permissions || permissions.length === 0)
+                return true;
+            const hasPermission = permissions.some((perm) => user.permissionCodes.includes(perm));
+            if (!hasPermission)
+                throw new common_1.UnauthorizedException('No tenes permiso para acceder a este recurso');
         }
         catch (error) {
             throw new common_1.UnauthorizedException(error?.message);

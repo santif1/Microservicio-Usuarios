@@ -11,10 +11,11 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const entities_1 = require("./entities");
-const auth_middleware_1 = require("./middlewares/auth.middleware");
-const jwt_service_1 = require("./jwt/jwt.service");
 const users_controller_1 = require("./users/users.controller");
-const users_service_1 = require("./users/users.service");
+const roles_module_1 = require("./roles/roles.module");
+const permissions_module_1 = require("./permissions/permissions.module");
+const users_module_1 = require("./users/users.module");
+const middleware_module_1 = require("./middlewares/middleware.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -24,7 +25,7 @@ exports.AppModule = AppModule = __decorate([
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres',
                 host: '127.0.0.1',
-                port: 5432,
+                port: 5434,
                 database: 'users',
                 username: 'postgres',
                 password: 'postgres1',
@@ -33,9 +34,12 @@ exports.AppModule = AppModule = __decorate([
                 entities: entities_1.entities,
             }),
             typeorm_1.TypeOrmModule.forFeature(entities_1.entities),
+            roles_module_1.RolesModule,
+            permissions_module_1.PermissionsModule,
+            users_module_1.UsersModule,
+            middleware_module_1.MiddlewaresModule
         ],
         controllers: [app_controller_1.AppController, users_controller_1.UsersController],
-        providers: [auth_middleware_1.AuthGuard, jwt_service_1.JwtService, users_service_1.UsersService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
