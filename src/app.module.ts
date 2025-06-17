@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { MiddlewaresModule } from './middlewares/middleware.module';
 import { JwtModule } from './jwt/jwt.module';
 import { SeedService } from './users/seed.service';
+import { JwtService } from './jwt/jwt.service';
 
 
 @Module({
@@ -35,7 +36,7 @@ import { SeedService } from './users/seed.service';
   ],
   controllers: [AppController, UsersController],
   providers: [
-    SeedService
+    SeedService, JwtService
   ]
 })
 export class AppModule {}
