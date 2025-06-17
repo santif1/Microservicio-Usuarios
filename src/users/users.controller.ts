@@ -52,7 +52,7 @@ export class UsersController {
     return this.service.canDo(request.user, permission);
   }
 
-  @Get('users/refresh-token')
+  @Post('users/refresh-token')
   refreshToken(@Req() request: Request) {
 
     const token = request.headers['refresh-token'];

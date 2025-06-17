@@ -94,7 +94,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "canDo", null);
 __decorate([
-    (0, common_1.Get)('users/refresh-token'),
+    (0, common_1.Post)('users/refresh-token'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
