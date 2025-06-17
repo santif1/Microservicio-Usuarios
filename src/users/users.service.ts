@@ -28,8 +28,13 @@ export class UsersService {
   async refreshToken(refreshToken: string) {
     return this.jwtService.refreshToken(refreshToken);
   }
-  canDo(user: UserI, permission: string): boolean {
-    const result = user.permissionCodes.includes(permission);
+
+  canDo(user: UserEntity, permission: string): boolean {
+    const permissions = user.permissionCodes;
+    if (!permissions || permissions.length === 0) {
+      throw new UnauthorizedException();
+    }
+    const result = permissions.includes(permission);
     if (!result) {
       throw new UnauthorizedException();
     }

@@ -32,7 +32,11 @@ let UsersService = class UsersService {
         return this.jwtService.refreshToken(refreshToken);
     }
     canDo(user, permission) {
-        const result = user.permissionCodes.includes(permission);
+        const permissions = user.permissionCodes;
+        if (!permissions || permissions.length === 0) {
+            throw new common_1.UnauthorizedException();
+        }
+        const result = permissions.includes(permission);
         if (!result) {
             throw new common_1.UnauthorizedException();
         }

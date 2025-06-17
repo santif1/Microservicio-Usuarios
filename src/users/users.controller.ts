@@ -14,29 +14,29 @@ import { Request } from 'express';
 import { AuthGuard } from '../middlewares/auth.middleware';
 import { RequestWithUser } from 'src/interfaces/request-user';
 
-@Controller('users')
+@Controller()
 export class UsersController {
   constructor(private service: UsersService) {}
 
   @UseGuards(AuthGuard)
-  @Get()
+  @Get('users')
   async findAll() {
   return this.service.findAll();
   }
 
 
   @UseGuards(AuthGuard)
-  @Get(':email')
+  @Get('users/:email')
   async findOne(@Param('email') email: string) {
   return this.service.findByEmail(email);
   }
 
-  @Post('login')
+  @Post('users/login')
   login(@Body() body: LoginDTO) {
     return this.service.login(body);
   }
 
-  @Post('register')
+  @Post('users/register')
   register(@Body() body: RegisterDTO) {
     return this.service.register(body);
   }
@@ -50,14 +50,14 @@ export class UsersController {
     return this.service.canDo(request.user, permission);
   }
 
-  @Get('refresh-token')
+  @Get('users/refresh-token')
   refreshToken(@Req() request: Request) {
     return this.service.refreshToken(
       request.headers['refresh-token'] as string,
     );
   }
 
-  @Post(':id/roles')
+  @Post('users/:id/roles')
   assignRole(){
     
   }

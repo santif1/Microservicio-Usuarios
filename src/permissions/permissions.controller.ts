@@ -12,23 +12,23 @@ export class PermissionsController {
     ){}
     @UseGuards(AuthGuard)
     @Permissions(['permissions_create'])
-    @Post('permissions')
+    @Post()
     create(@Body() dto: createPermissionDto){
         return this.PermissionsService.create(dto);
     }
 
-    @Get('permissions')
+    @Get()
     findAll(){
         return this.PermissionsService.findAll();
     }
 
-    @Get('permissions/:id')
+    @Get(':id')
     findOne(@Body('id') id:number){
         return this.PermissionsService.findOne(id);
     }
     @UseGuards(AuthGuard)
     @Permissions(['delete_permissions'])
-    @Delete('permissions/:id')
+    @Delete(':id')
     remove(@Param('id') id:number){
         return this.PermissionsService.remove(id);
     }

@@ -50,28 +50,28 @@ let UsersController = class UsersController {
 exports.UsersController = UsersController;
 __decorate([
     (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
-    (0, common_1.Get)(),
+    (0, common_1.Get)('users'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
-    (0, common_1.Get)(':email'),
+    (0, common_1.Get)('users/:email'),
     __param(0, (0, common_1.Param)('email')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Post)('login'),
+    (0, common_1.Post)('users/login'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [login_dto_1.LoginDTO]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "login", null);
 __decorate([
-    (0, common_1.Post)('register'),
+    (0, common_1.Post)('users/register'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [register_dto_1.RegisterDTO]),
@@ -87,14 +87,14 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "canDo", null);
 __decorate([
-    (0, common_1.Get)('refresh-token'),
+    (0, common_1.Get)('users/refresh-token'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "refreshToken", null);
 __decorate([
-    (0, common_1.Post)(':id/roles'),
+    (0, common_1.Post)('users/:id/roles'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
@@ -109,7 +109,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "canDoMultiple", null);
 exports.UsersController = UsersController = __decorate([
-    (0, common_1.Controller)('users'),
+    (0, common_1.Controller)(),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

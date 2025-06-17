@@ -42,7 +42,8 @@ let SeedService = class SeedService {
             'order_list',
             'order_create',
             'order_modify',
-            'order_remove'
+            'order_remove',
+            'permissions_create'
         ];
         const createdPermissions = await Promise.all(allPermissions.map(async (name) => {
             let permission = await this.permissionRepo.findOneBy({ name });

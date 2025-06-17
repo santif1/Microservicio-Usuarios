@@ -5,7 +5,6 @@ import { UserEntity } from '../entities/user.entity';
 import { RoleEntity } from '../entities/roles.entity';
 import { PermissionEntity } from '../entities/permissions.entity';
 import * as bcrypt from 'bcrypt';
-import { LargeNumberLike } from 'node:crypto';
 
 @Injectable()
 export class SeedService implements OnModuleInit {
@@ -37,7 +36,8 @@ export class SeedService implements OnModuleInit {
       'order_list',
       'order_create',
       'order_modify',
-      'order_remove'
+      'order_remove',
+      'permissions_create'
     ];
 
     const createdPermissions = await Promise.all(
