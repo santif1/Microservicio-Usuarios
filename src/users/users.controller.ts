@@ -6,17 +6,19 @@ import {
   Post,
   Req,
   UseGuards,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { LoginDTO } from '../interfaces/login.dto';
 import { RegisterDTO } from '../interfaces/register.dto';
 import { Request } from 'express';
+import { JwtService} from 'src/jwt/jwt.service';
 import { AuthGuard } from '../middlewares/auth.middleware';
 import { RequestWithUser } from 'src/interfaces/request-user';
 
 @Controller()
 export class UsersController {
-  constructor(private service: UsersService) {}
+  constructor(private service: UsersService, private readonly jwtService: JwtService) {}
 
   @UseGuards(AuthGuard)
   @Get('users')
@@ -52,10 +54,14 @@ export class UsersController {
 
   @Get('users/refresh-token')
   refreshToken(@Req() request: Request) {
-    return this.service.refreshToken(
-      request.headers['refresh-token'] as string,
-    );
+
+    const token = request.headers['refresh-token'];
+    if (!token || typeof token !== 'string') {
+      throw new UnauthorizedException('No refresh token provided');
+    }
+    return this.jwtService.refreshToken(token);
   }
+
 
   @Post('users/:id/roles')
   assignRole(){
