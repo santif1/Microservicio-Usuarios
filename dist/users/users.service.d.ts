@@ -9,6 +9,7 @@ export declare class UsersService {
     private jwtService;
     repository: typeof UserEntity;
     constructor(userRepository: Repository<UserEntity>, jwtService: JwtService);
+    findAll(): Promise<UserEntity[]>;
     refreshToken(refreshToken: string): Promise<{
         accessToken: string;
         refreshToken: string;

@@ -21,6 +21,10 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>
     ,private jwtService: JwtService) {}
 
+
+  async findAll(): Promise<UserEntity[]> {
+    return await this.userRepository.find({})
+  }
   async refreshToken(refreshToken: string) {
     return this.jwtService.refreshToken(refreshToken);
   }

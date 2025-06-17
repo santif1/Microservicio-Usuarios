@@ -11,14 +11,12 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const entities_1 = require("./entities");
-const auth_middleware_1 = require("./middlewares/auth.middleware");
 const users_controller_1 = require("./users/users.controller");
 const roles_module_1 = require("./roles/roles.module");
 const permissions_module_1 = require("./permissions/permissions.module");
 const users_module_1 = require("./users/users.module");
 const middleware_module_1 = require("./middlewares/middleware.module");
 const jwt_module_1 = require("./jwt/jwt.module");
-const core_1 = require("@nestjs/core");
 const seed_service_1 = require("./users/seed.service");
 let AppModule = class AppModule {
 };
@@ -46,10 +44,6 @@ exports.AppModule = AppModule = __decorate([
         ],
         controllers: [app_controller_1.AppController, users_controller_1.UsersController],
         providers: [
-            {
-                provide: core_1.APP_GUARD,
-                useClass: auth_middleware_1.AuthGuard,
-            },
             seed_service_1.SeedService
         ]
     })

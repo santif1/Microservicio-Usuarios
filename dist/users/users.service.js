@@ -25,6 +25,9 @@ let UsersService = class UsersService {
         this.jwtService = jwtService;
         this.repository = user_entity_1.UserEntity;
     }
+    async findAll() {
+        return await this.userRepository.find({});
+    }
     async refreshToken(refreshToken) {
         return this.jwtService.refreshToken(refreshToken);
     }

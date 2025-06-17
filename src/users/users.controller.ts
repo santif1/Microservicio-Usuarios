@@ -14,16 +14,21 @@ import { Request } from 'express';
 import { AuthGuard } from '../middlewares/auth.middleware';
 import { RequestWithUser } from 'src/interfaces/request-user';
 
-@Controller('')
+@Controller('users')
 export class UsersController {
   constructor(private service: UsersService) {}
 
   @UseGuards(AuthGuard)
-  @Get('me')
-  me(@Req() req: RequestWithUser) {
-    return {
-      email: req.user.email,
-    };
+  @Get()
+  async findAll() {
+  return this.service.findAll();
+  }
+
+
+  @UseGuards(AuthGuard)
+  @Get(':email')
+  async findOne(@Param('email') email: string) {
+  return this.service.findByEmail(email);
   }
 
   @Post('login')
@@ -52,7 +57,7 @@ export class UsersController {
     );
   }
 
-  @Post('users/:id/roles')
+  @Post(':id/roles')
   assignRole(){
     
   }

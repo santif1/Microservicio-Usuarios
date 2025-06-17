@@ -37,10 +37,6 @@ import { SeedService } from './users/seed.service';
   ],
   controllers: [AppController, UsersController],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
     SeedService
   ]
 })

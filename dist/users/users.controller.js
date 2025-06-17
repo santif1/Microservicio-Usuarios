@@ -22,10 +22,11 @@ let UsersController = class UsersController {
     constructor(service) {
         this.service = service;
     }
-    me(req) {
-        return {
-            email: req.user.email,
-        };
+    async findAll() {
+        return this.service.findAll();
+    }
+    async findOne(email) {
+        return this.service.findByEmail(email);
     }
     login(body) {
         return this.service.login(body);
@@ -49,12 +50,19 @@ let UsersController = class UsersController {
 exports.UsersController = UsersController;
 __decorate([
     (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
-    (0, common_1.Get)('me'),
-    __param(0, (0, common_1.Req)()),
+    (0, common_1.Get)(),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], UsersController.prototype, "me", null);
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
+    (0, common_1.Get)(':email'),
+    __param(0, (0, common_1.Param)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),
@@ -86,7 +94,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "refreshToken", null);
 __decorate([
-    (0, common_1.Post)('users/:id/roles'),
+    (0, common_1.Post)(':id/roles'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
@@ -101,7 +109,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "canDoMultiple", null);
 exports.UsersController = UsersController = __decorate([
-    (0, common_1.Controller)(''),
+    (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

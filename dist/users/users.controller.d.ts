@@ -6,9 +6,8 @@ import { RequestWithUser } from 'src/interfaces/request-user';
 export declare class UsersController {
     private service;
     constructor(service: UsersService);
-    me(req: RequestWithUser): {
-        email: string;
-    };
+    findAll(): Promise<import("../entities/user.entity").UserEntity[]>;
+    findOne(email: string): Promise<import("../entities/user.entity").UserEntity>;
     login(body: LoginDTO): Promise<{
         accessToken: string;
         refreshToken: string;
