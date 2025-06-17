@@ -58,8 +58,11 @@ export class UsersController {
   }
 
   @Post('users/:id/roles')
-  assignRole(){
-    
+  assignRole(
+    @Param('id') id: number,
+    @Body() dto: { roleIds: number[]}
+  ){
+    return this.service.assignRole(id, dto.roleIds);
   }
 
   @Post('can-do')

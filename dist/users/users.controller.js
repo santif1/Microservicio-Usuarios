@@ -40,7 +40,8 @@ let UsersController = class UsersController {
     refreshToken(request) {
         return this.service.refreshToken(request.headers['refresh-token']);
     }
-    assignRole() {
+    assignRole(id, dto) {
+        return this.service.assignRole(id, dto.roleIds);
     }
     canDoMultiple(request, body) {
         const allowed = body.permissions.every(p => this.service.canDo(request.user, p));
@@ -95,8 +96,10 @@ __decorate([
 ], UsersController.prototype, "refreshToken", null);
 __decorate([
     (0, common_1.Post)('users/:id/roles'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "assignRole", null);
 __decorate([

@@ -1,6 +1,7 @@
 import {
   HttpException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { LoginDTO } from 'src/interfaces/login.dto';
@@ -11,7 +12,8 @@ import { hashSync, compareSync } from 'bcrypt';
 import { JwtService } from 'src/jwt/jwt.service';
 import * as dayjs from 'dayjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
+import { RoleEntity } from '../entities/roles.entity';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +21,10 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>
-    ,private jwtService: JwtService) {}
+    ,private jwtService: JwtService,
+    @InjectRepository(RoleEntity)
+    private readonly roleRepository: Repository<RoleEntity>,
+  ) {}
 
 
   async findAll(): Promise<UserEntity[]> {
@@ -72,6 +77,19 @@ export class UsersService {
   }
   async findByEmail(email: string): Promise<UserEntity> {
     return await this.userRepository.findOneBy({ email });
+  }
+
+  async assignRole(id: number, roleIds: number[]): Promise<string> {
+
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+
+    const roles = await this.roleRepository.findBy({ id: In(roleIds) });
+    user.roles = [...user.roles, ...roles];
+
+    await this.userRepository.save(user);
+
+    return 'Rol asignado con éxito';
   }
 
 }

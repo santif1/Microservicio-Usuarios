@@ -19,10 +19,12 @@ const bcrypt_1 = require("bcrypt");
 const jwt_service_1 = require("../jwt/jwt.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
+const roles_entity_1 = require("../entities/roles.entity");
 let UsersService = class UsersService {
-    constructor(userRepository, jwtService) {
+    constructor(userRepository, jwtService, roleRepository) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.roleRepository = roleRepository;
         this.repository = user_entity_1.UserEntity;
     }
     async findAll() {
@@ -71,12 +73,23 @@ let UsersService = class UsersService {
     async findByEmail(email) {
         return await this.userRepository.findOneBy({ email });
     }
+    async assignRole(id, roleIds) {
+        const user = await this.userRepository.findOneBy({ id });
+        if (!user)
+            throw new common_1.NotFoundException(`User with id ${id} not found`);
+        const roles = await this.roleRepository.findBy({ id: (0, typeorm_2.In)(roleIds) });
+        user.roles = [...user.roles, ...roles];
+        await this.userRepository.save(user);
+        return 'Rol asignado con éxito';
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
+    __param(2, (0, typeorm_1.InjectRepository)(roles_entity_1.RoleEntity)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        jwt_service_1.JwtService])
+        jwt_service_1.JwtService,
+        typeorm_2.Repository])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

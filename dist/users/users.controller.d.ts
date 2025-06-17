@@ -20,7 +20,9 @@ export declare class UsersController {
         accessToken: string;
         refreshToken: string;
     }>;
-    assignRole(): void;
+    assignRole(id: number, dto: {
+        roleIds: number[];
+    }): Promise<string>;
     canDoMultiple(request: RequestWithUser, body: {
         permissions: string[];
     }): {
