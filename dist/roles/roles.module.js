@@ -25,6 +25,7 @@ exports.RolesModule = RolesModule = __decorate([
         ],
         controllers: [roles_controller_1.RolesController],
         providers: [roles_service_1.RolesService, jwt_service_1.JwtService],
+        exports: [roles_service_1.RolesService]
     })
 ], RolesModule);
 //# sourceMappingURL=roles.module.js.map

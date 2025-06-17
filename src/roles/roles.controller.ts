@@ -5,17 +5,16 @@ import { Permissions } from 'src/middlewares/decorators/permissions.decorator';
 import { AuthGuard } from 'src/middlewares/auth.middleware'
  
 
-
 @Controller('roles')
 export class RolesController {
-    
-    constructor( private readonly RolesService ){}
+
+    constructor( private readonly RolesService: RolesService ){}
 
     @UseGuards(AuthGuard)
     @Permissions(['roles_create'])
     @Post('roles')
     createRole( @Body() dto: createRoleDto ) {
-        return this.RolesService.create();
+        return this.RolesService.create(dto);
     }
     
     @Get('roles')

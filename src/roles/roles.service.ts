@@ -39,7 +39,7 @@ export class RolesService {
     }
 
     //Obtiene todos los roles
-    async findALL(): Promise<RoleEntity[]> {
+    async findAll(): Promise<RoleEntity[]> {
         return await this.roleRepository.find({});
     }
 

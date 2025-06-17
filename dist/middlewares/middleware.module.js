@@ -11,13 +11,12 @@ const common_1 = require("@nestjs/common");
 const auth_middleware_1 = require("./auth.middleware");
 const jwt_module_1 = require("../jwt/jwt.module");
 const users_module_1 = require("../users/users.module");
-const core_1 = require("@nestjs/core");
 let MiddlewaresModule = class MiddlewaresModule {
 };
 exports.MiddlewaresModule = MiddlewaresModule;
 exports.MiddlewaresModule = MiddlewaresModule = __decorate([
     (0, common_1.Module)({
-        imports: [users_module_1.UsersModule, jwt_module_1.JwtModule, core_1.Reflector],
+        imports: [users_module_1.UsersModule, jwt_module_1.JwtModule],
         providers: [auth_middleware_1.AuthGuard],
         exports: [auth_middleware_1.AuthGuard],
     })

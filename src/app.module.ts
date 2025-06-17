@@ -3,13 +3,14 @@ import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { entities } from './entities';
 import { AuthGuard } from './middlewares/auth.middleware';
-import { JwtService } from './jwt/jwt.service';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { UsersModule } from './users/users.module';
 import { MiddlewaresModule } from './middlewares/middleware.module';
+import { JwtModule } from './jwt/jwt.module';
+import { APP_GUARD } from '@nestjs/core';
 
 
 @Module({
@@ -29,8 +30,15 @@ import { MiddlewaresModule } from './middlewares/middleware.module';
     RolesModule,
     PermissionsModule,
     UsersModule,
-    MiddlewaresModule
+    MiddlewaresModule,
+    JwtModule
   ],
   controllers: [AppController, UsersController],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ]
 })
 export class AppModule {}

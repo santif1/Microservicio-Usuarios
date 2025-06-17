@@ -40,7 +40,7 @@ let RolesService = class RolesService {
         });
         return await this.roleRepository.save(role);
     }
-    async findALL() {
+    async findAll() {
         return await this.roleRepository.find({});
     }
     async findOne(id) {

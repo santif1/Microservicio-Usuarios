@@ -12,16 +12,21 @@ const permissions_controller_1 = require("./permissions.controller");
 const permissions_service_1 = require("./permissions.service");
 const entities_1 = require("../entities");
 const typeorm_1 = require("@nestjs/typeorm");
+const jwt_module_1 = require("../jwt/jwt.module");
+const users_module_1 = require("../users/users.module");
 let PermissionsModule = class PermissionsModule {
 };
 exports.PermissionsModule = PermissionsModule;
 exports.PermissionsModule = PermissionsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature(entities_1.entities)
+            typeorm_1.TypeOrmModule.forFeature(entities_1.entities),
+            jwt_module_1.JwtModule,
+            users_module_1.UsersModule
         ],
         controllers: [permissions_controller_1.PermissionsController],
-        providers: [permissions_service_1.PermissionsService]
+        providers: [permissions_service_1.PermissionsService, jwt_module_1.JwtModule],
+        exports: [permissions_service_1.PermissionsService]
     })
 ], PermissionsModule);
 //# sourceMappingURL=permissions.module.js.map

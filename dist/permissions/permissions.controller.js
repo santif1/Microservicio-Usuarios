@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const createPermissionDto_1 = require("../interfaces/createPermissionDto");
 const permissions_decorator_1 = require("../middlewares/decorators/permissions.decorator");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
+const permissions_service_1 = require("./permissions.service");
 let PermissionsController = class PermissionsController {
     constructor(PermissionsService) {
         this.PermissionsService = PermissionsService;
@@ -54,7 +55,7 @@ __decorate([
     (0, common_1.Get)('permissions/:id'),
     __param(0, (0, common_1.Body)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], PermissionsController.prototype, "findOne", null);
 __decorate([
@@ -68,6 +69,6 @@ __decorate([
 ], PermissionsController.prototype, "remove", null);
 exports.PermissionsController = PermissionsController = __decorate([
     (0, common_1.Controller)('permissions'),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [permissions_service_1.PermissionsService])
 ], PermissionsController);
 //# sourceMappingURL=permissions.controller.js.map

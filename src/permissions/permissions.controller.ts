@@ -2,12 +2,13 @@ import { Controller, Get, Post, Delete, Body, Param, UseGuards } from '@nestjs/c
 import { createPermissionDto } from 'src/interfaces/createPermissionDto';
 import { Permissions } from 'src/middlewares/decorators/permissions.decorator';
 import { AuthGuard } from 'src/middlewares/auth.middleware';
+import { PermissionsService } from './permissions.service';
 
 @Controller('permissions')
 export class PermissionsController {
 
     constructor(
-        private readonly PermissionsService
+        private readonly PermissionsService: PermissionsService
     ){}
     @UseGuards(AuthGuard)
     @Permissions(['permissions_create'])
@@ -22,7 +23,7 @@ export class PermissionsController {
     }
 
     @Get('permissions/:id')
-    findOne(@Body('id') id:string){
+    findOne(@Body('id') id:number){
         return this.PermissionsService.findOne(id);
     }
     @UseGuards(AuthGuard)

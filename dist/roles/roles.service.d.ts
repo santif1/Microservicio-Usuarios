@@ -10,7 +10,7 @@ export declare class RolesService {
     private readonly userRepository;
     constructor(roleRepository: Repository<RoleEntity>, permissionRepository: Repository<PermissionEntity>, userRepository: Repository<UserEntity>);
     create(dto: createRoleDto): Promise<RoleEntity>;
-    findALL(): Promise<RoleEntity[]>;
+    findAll(): Promise<RoleEntity[]>;
     findOne(id: string): Promise<RoleEntity>;
     addPermissions(roleId: number, permissionIds: number[]): Promise<RoleEntity>;
     remove(id: number): Promise<Mensaje>;
