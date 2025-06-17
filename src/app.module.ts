@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { MiddlewaresModule } from './middlewares/middleware.module';
 import { JwtModule } from './jwt/jwt.module';
 import { APP_GUARD } from '@nestjs/core';
+import { SeedService } from './users/seed.service';
 
 
 @Module({
@@ -22,8 +23,8 @@ import { APP_GUARD } from '@nestjs/core';
       database: 'users',
       username: 'postgres',
       password: 'postgres1',
-      synchronize: true,
-      dropSchema: true,
+      synchronize: false,
+      dropSchema: false,
       entities,
     }),
     TypeOrmModule.forFeature(entities),
@@ -31,7 +32,8 @@ import { APP_GUARD } from '@nestjs/core';
     PermissionsModule,
     UsersModule,
     MiddlewaresModule,
-    JwtModule
+    JwtModule,
+
   ],
   controllers: [AppController, UsersController],
   providers: [
@@ -39,6 +41,7 @@ import { APP_GUARD } from '@nestjs/core';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    SeedService
   ]
 })
 export class AppModule {}
