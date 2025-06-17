@@ -11,25 +11,25 @@ export class RolesController {
     constructor( private readonly RolesService: RolesService ){}
 
     @UseGuards(AuthGuard)
-    @Permissions(['roles_create'])
-    @Post('roles')
+    @Permissions(['create_roles'])
+    @Post()
     createRole( @Body() dto: createRoleDto ) {
         return this.RolesService.create(dto);
     }
     
-    @Get('roles')
+    @Get()
     findAll(){
         return this.RolesService.findAll();
     }
 
-    @Get('roles/:id')
+    @Get(':id')
     findOne(@Body('id') id: string) {
         return this.RolesService.findOne(id);
     }
 
     @UseGuards(AuthGuard)
     @Permissions(['add_permissions'])
-    @Post('roles/:id/permissions')
+    @Post(':id/permissions')
     addPermissions(
         @Param('id') id: number,
         @Body() dto: { permissionIds: number[] }) {
@@ -39,7 +39,7 @@ export class RolesController {
 
     @UseGuards(AuthGuard)
     @Permissions(['delete_roles'])
-    @Delete('role/:id')
+    @Delete(':id')
     remove(@Param('id') id: number){
         return this.RolesService.remove(id);
     }

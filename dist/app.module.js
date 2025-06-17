@@ -18,6 +18,7 @@ const users_module_1 = require("./users/users.module");
 const middleware_module_1 = require("./middlewares/middleware.module");
 const jwt_module_1 = require("./jwt/jwt.module");
 const seed_service_1 = require("./users/seed.service");
+const jwt_service_1 = require("./jwt/jwt.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -44,7 +45,7 @@ exports.AppModule = AppModule = __decorate([
         ],
         controllers: [app_controller_1.AppController, users_controller_1.UsersController],
         providers: [
-            seed_service_1.SeedService
+            seed_service_1.SeedService, jwt_service_1.JwtService
         ]
     })
 ], AppModule);

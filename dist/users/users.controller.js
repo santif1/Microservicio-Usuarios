@@ -17,10 +17,12 @@ const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const login_dto_1 = require("../interfaces/login.dto");
 const register_dto_1 = require("../interfaces/register.dto");
+const jwt_service_1 = require("../jwt/jwt.service");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
 let UsersController = class UsersController {
-    constructor(service) {
+    constructor(service, jwtService) {
         this.service = service;
+        this.jwtService = jwtService;
     }
     async findAll() {
         return this.service.findAll();
@@ -38,7 +40,11 @@ let UsersController = class UsersController {
         return this.service.canDo(request.user, permission);
     }
     refreshToken(request) {
-        return this.service.refreshToken(request.headers['refresh-token']);
+        const token = request.headers['refresh-token'];
+        if (!token || typeof token !== 'string') {
+            throw new common_1.UnauthorizedException('No refresh token provided');
+        }
+        return this.jwtService.refreshToken(token);
     }
     assignRole(id, dto) {
         return this.service.assignRole(id, dto.roleIds);
@@ -113,6 +119,6 @@ __decorate([
 ], UsersController.prototype, "canDoMultiple", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    __metadata("design:paramtypes", [users_service_1.UsersService, jwt_service_1.JwtService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map
