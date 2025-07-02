@@ -99,7 +99,7 @@ export class UsersController {
   return this.service.getProfile(userId);
   }
   @UseGuards(AuthGuard)
-  @Put('profile')
+  @Put('users/profile')
   async updateProfile(
     @Req() request: RequestWithUser,
     @Body() updateProfileDto: UpdateUserProfileDto // ✅ Usar el DTO

@@ -153,7 +153,7 @@ __decorate([
 ], UsersController.prototype, "getProfile", null);
 __decorate([
     (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
-    (0, common_2.Put)('profile'),
+    (0, common_2.Put)('users/profile'),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
