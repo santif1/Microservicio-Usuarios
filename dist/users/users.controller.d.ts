@@ -4,15 +4,21 @@ import { RegisterDTO } from '../interfaces/register.dto';
 import { Request } from 'express';
 import { JwtService } from 'src/jwt/jwt.service';
 import { RequestWithUser } from 'src/interfaces/request-user';
+import { UpdateUserProfileDto } from 'src/dto/updateuser.dto';
 export declare class UsersController {
     private service;
     private readonly jwtService;
-    constructor(service: UsersService, jwtService: JwtService);
+    private readonly usersService;
+    constructor(service: UsersService, jwtService: JwtService, usersService: UsersService);
     findAll(): Promise<import("../entities/user.entity").UserEntity[]>;
     findOne(email: string): Promise<import("../entities/user.entity").UserEntity>;
     login(body: LoginDTO): Promise<{
         accessToken: string;
         refreshToken: string;
+        user: {
+            id: number;
+            email: string;
+        };
     }>;
     register(body: RegisterDTO): Promise<{
         status: string;
@@ -31,4 +37,5 @@ export declare class UsersController {
         allowed: boolean;
     };
     getProfile(request: RequestWithUser): Promise<import("../entities/user.entity").UserEntity>;
+    updateProfile(request: RequestWithUser, updateProfileDto: UpdateUserProfileDto): Promise<import("../entities/user.entity").UserEntity>;
 }

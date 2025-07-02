@@ -68,7 +68,11 @@ let UsersService = class UsersService {
         }
         return {
             accessToken: this.jwtService.generateToken({ email: user.email }, 'auth'),
-            refreshToken: this.jwtService.generateToken({ email: user.email }, 'refresh')
+            refreshToken: this.jwtService.generateToken({ email: user.email }, 'refresh'),
+            user: {
+                id: user.id,
+                email: user.email,
+            }
         };
     }
     async getProfile(userId) {
@@ -93,26 +97,24 @@ let UsersService = class UsersService {
         await this.userRepository.save(user);
         return 'Rol asignado con éxito';
     }
-    async updateProfile(userId, updateData) {
-        const user = await this.userRepository.findOne({ where: { id: userId } });
+    async updateProfile(userId, updateProfileDto) {
+        console.log('🔍 Actualizando usuario:', userId, updateProfileDto);
+        const user = await this.userRepository.findOne({
+            where: { id: userId }
+        });
         if (!user) {
-            throw new common_1.NotFoundException('Usuario no encontrado');
+            throw new Error('Usuario no encontrado');
         }
-        if (updateData.password) {
-            updateData.password = await bcrypt.hash(updateData.password, 10);
+        if (updateProfileDto.email) {
+            user.email = updateProfileDto.email;
         }
-        Object.assign(user, updateData);
+        if (updateProfileDto.password) {
+            const saltRounds = 10;
+            user.password = await bcrypt.hash(updateProfileDto.password, saltRounds);
+        }
         const updatedUser = await this.userRepository.save(user);
-        delete updatedUser.password;
+        console.log('✅ Usuario actualizado exitosamente');
         return updatedUser;
-    }
-    async findById(id) {
-        const user = await this.userRepository.findOne({ where: { id } });
-        if (!user) {
-            throw new common_1.NotFoundException('Usuario no encontrado');
-        }
-        delete user.password;
-        return user;
     }
 };
 exports.UsersService = UsersService;

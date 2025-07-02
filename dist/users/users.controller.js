@@ -19,10 +19,13 @@ const login_dto_1 = require("../interfaces/login.dto");
 const register_dto_1 = require("../interfaces/register.dto");
 const jwt_service_1 = require("../jwt/jwt.service");
 const auth_middleware_1 = require("../middlewares/auth.middleware");
+const common_2 = require("@nestjs/common");
+const updateuser_dto_1 = require("../dto/updateuser.dto");
 let UsersController = class UsersController {
-    constructor(service, jwtService) {
+    constructor(service, jwtService, usersService) {
         this.service = service;
         this.jwtService = jwtService;
+        this.usersService = usersService;
     }
     async findAll() {
         return this.service.findAll();
@@ -54,8 +57,27 @@ let UsersController = class UsersController {
         return { allowed };
     }
     async getProfile(request) {
+        console.log('🔍 request.user completo:', request.user);
+        console.log('🔍 request.user.id:', request.user?.id);
+        console.log('🔍 Tipo de request.user.id:', typeof request.user?.id);
+        if (!request.user || !request.user.id) {
+            throw new Error('Usuario no autenticado o ID faltante');
+        }
         const userId = request.user.id;
-        return this.service.findById(userId);
+        return this.service.getProfile(userId);
+    }
+    async updateProfile(request, updateProfileDto) {
+        console.log('🔍 Datos a actualizar:', updateProfileDto);
+        const userId = request.user.id;
+        try {
+            const updatedUser = await this.usersService.updateProfile(userId, updateProfileDto);
+            console.log('✅ Usuario actualizado:', { id: updatedUser.id, email: updatedUser.email });
+            return updatedUser;
+        }
+        catch (error) {
+            console.error('❌ Error actualizando perfil:', error);
+            throw new Error('Error al actualizar perfil');
+        }
     }
 };
 exports.UsersController = UsersController;
@@ -129,8 +151,17 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getProfile", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
+    (0, common_2.Put)('profile'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, updateuser_dto_1.UpdateUserProfileDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "updateProfile", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [users_service_1.UsersService, jwt_service_1.JwtService])
+    __metadata("design:paramtypes", [users_service_1.UsersService, jwt_service_1.JwtService, users_service_1.UsersService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

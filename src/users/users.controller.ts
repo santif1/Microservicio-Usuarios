@@ -21,7 +21,7 @@ import { UpdateUserProfileDto } from 'src/dto/updateuser.dto'; // ajustar la rut
 
 @Controller()
 export class UsersController {
-  constructor(private service: UsersService, private readonly jwtService: JwtService) {}
+  constructor(private service: UsersService, private readonly jwtService: JwtService, private readonly usersService: UsersService) {}
 
   @UseGuards(AuthGuard)
   @Get('users')
@@ -86,7 +86,34 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get('users/profile')
   async getProfile(@Req() request: RequestWithUser) {
+   // 🔍 DEBUG: Verificar qué hay en request.user
+  console.log('🔍 request.user completo:', request.user);
+  console.log('🔍 request.user.id:', request.user?.id);
+  console.log('🔍 Tipo de request.user.id:', typeof request.user?.id);
+  
+  if (!request.user || !request.user.id) {
+    throw new Error('Usuario no autenticado o ID faltante');
+  }
+  
+  const userId = request.user.id;
+  return this.service.getProfile(userId);
+  }
+  @UseGuards(AuthGuard)
+  @Put('profile')
+  async updateProfile(
+    @Req() request: RequestWithUser,
+    @Body() updateProfileDto: UpdateUserProfileDto // ✅ Usar el DTO
+  ) {
+    console.log('🔍 Datos a actualizar:', updateProfileDto);
     const userId = request.user.id;
-    return this.service.findById(userId);
+    
+    try {
+      const updatedUser = await this.usersService.updateProfile(userId, updateProfileDto);
+      console.log('✅ Usuario actualizado:', { id: updatedUser.id, email: updatedUser.email });
+      return updatedUser;
+    } catch (error) {
+      console.error('❌ Error actualizando perfil:', error);
+      throw new Error('Error al actualizar perfil');
+    }
   }
 }

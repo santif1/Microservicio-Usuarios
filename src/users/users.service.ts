@@ -74,7 +74,12 @@ export class UsersService {
       refreshToken: this.jwtService.generateToken(
         { email: user.email },
         'refresh',
-      )
+      ),
+      user: {
+      id: user.id,
+      email: user.email,
+      // agregar otros campos que necesites
+    }
     };
   }
 
@@ -110,33 +115,33 @@ export class UsersService {
     return 'Rol asignado con éxito';
   }
   //PERFIL
-  async updateProfile(userId: number, updateData: UpdateUserProfileDto) {
-  const user = await this.userRepository.findOne({ where: { id: userId } });
-  
-  if (!user) {
-    throw new NotFoundException('Usuario no encontrado');
-  }
+  async updateProfile(userId: number, updateProfileDto: UpdateUserProfileDto): Promise<UserEntity> {
+    console.log('🔍 Actualizando usuario:', userId, updateProfileDto);
+    
+    const user = await this.userRepository.findOne({
+      where: { id: userId }
+    });
 
-  // Si se actualiza la contraseña, hashearla
-  if (updateData.password) {
-    updateData.password = await bcrypt.hash(updateData.password, 10);
-  }
-   // Actualizar solo los campos proporcionados
-  Object.assign(user, updateData);
-  
-  const updatedUser = await this.userRepository.save(user);
-  
-  // No devolver la contraseña
-  delete updatedUser.password;
-  return updatedUser;
-  }
-  async findById(id: number) {
-    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+      throw new Error('Usuario no encontrado');
     }
-    delete user.password;
-    return user;
+
+    // Actualizar campos si están presentes
+    if (updateProfileDto.email) {
+      user.email = updateProfileDto.email;
+    }
+
+    if (updateProfileDto.password) {
+      // ✅ Hashear la nueva contraseña
+      const saltRounds = 10;
+      user.password = await bcrypt.hash(updateProfileDto.password, saltRounds);
+    }
+
+    // Guardar cambios
+    const updatedUser = await this.userRepository.save(user);
+    console.log('✅ Usuario actualizado exitosamente');
+    
+    return updatedUser;
   }
   
 }

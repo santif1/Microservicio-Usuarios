@@ -23,10 +23,13 @@ export declare class UsersService {
     login(body: LoginDTO): Promise<{
         accessToken: string;
         refreshToken: string;
+        user: {
+            id: number;
+            email: string;
+        };
     }>;
     getProfile(userId: number): Promise<UserEntity>;
     findByEmail(email: string): Promise<UserEntity>;
     assignRole(id: number, roleIds: number[]): Promise<string>;
-    updateProfile(userId: number, updateData: UpdateUserProfileDto): Promise<UserEntity>;
-    findById(id: number): Promise<UserEntity>;
+    updateProfile(userId: number, updateProfileDto: UpdateUserProfileDto): Promise<UserEntity>;
 }
