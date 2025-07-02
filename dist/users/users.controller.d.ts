@@ -30,4 +30,5 @@ export declare class UsersController {
     }): {
         allowed: boolean;
     };
+    getProfile(request: RequestWithUser): Promise<import("../entities/user.entity").UserEntity>;
 }

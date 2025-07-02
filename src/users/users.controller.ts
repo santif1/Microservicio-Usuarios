@@ -15,6 +15,9 @@ import { Request } from 'express';
 import { JwtService} from 'src/jwt/jwt.service';
 import { AuthGuard } from '../middlewares/auth.middleware';
 import { RequestWithUser } from 'src/interfaces/request-user';
+import { Put } from '@nestjs/common';
+import { UpdateUserProfileDto } from 'src/dto/updateuser.dto'; // ajustar la ruta según tu estructura
+
 
 @Controller()
 export class UsersController {
@@ -42,7 +45,6 @@ export class UsersController {
   register(@Body() body: RegisterDTO) {
     return this.service.register(body);
   }
-
   @UseGuards(AuthGuard)
   @Get('can-do/:permission')
   canDo(
@@ -79,5 +81,12 @@ export class UsersController {
     ) {
     const allowed = body.permissions.every(p => this.service.canDo(request.user, p));
     return { allowed };
+  }
+  //PERFIL
+  @UseGuards(AuthGuard)
+  @Get('users/profile')
+  async getProfile(@Req() request: RequestWithUser) {
+    const userId = request.user.id;
+    return this.service.findById(userId);
   }
 }

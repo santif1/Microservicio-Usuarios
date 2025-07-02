@@ -4,6 +4,7 @@ import { UserEntity } from '../entities/user.entity';
 import { JwtService } from 'src/jwt/jwt.service';
 import { Repository } from 'typeorm';
 import { RoleEntity } from '../entities/roles.entity';
+import { UpdateUserProfileDto } from 'src/dto/updateuser.dto';
 export declare class UsersService {
     private readonly userRepository;
     private jwtService;
@@ -23,6 +24,9 @@ export declare class UsersService {
         accessToken: string;
         refreshToken: string;
     }>;
+    getProfile(userId: number): Promise<UserEntity>;
     findByEmail(email: string): Promise<UserEntity>;
     assignRole(id: number, roleIds: number[]): Promise<string>;
+    updateProfile(userId: number, updateData: UpdateUserProfileDto): Promise<UserEntity>;
+    findById(id: number): Promise<UserEntity>;
 }

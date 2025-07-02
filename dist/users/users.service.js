@@ -20,6 +20,7 @@ const jwt_service_1 = require("../jwt/jwt.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const roles_entity_1 = require("../entities/roles.entity");
+const bcrypt = require("bcrypt");
 let UsersService = class UsersService {
     constructor(userRepository, jwtService, roleRepository) {
         this.userRepository = userRepository;
@@ -70,6 +71,16 @@ let UsersService = class UsersService {
             refreshToken: this.jwtService.generateToken({ email: user.email }, 'refresh')
         };
     }
+    async getProfile(userId) {
+        const user = await this.userRepository.findOne({
+            where: { id: userId },
+            relations: ['roles']
+        });
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+        return user;
+    }
     async findByEmail(email) {
         return await this.userRepository.findOneBy({ email });
     }
@@ -81,6 +92,27 @@ let UsersService = class UsersService {
         user.roles = [...user.roles, ...roles];
         await this.userRepository.save(user);
         return 'Rol asignado con éxito';
+    }
+    async updateProfile(userId, updateData) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new common_1.NotFoundException('Usuario no encontrado');
+        }
+        if (updateData.password) {
+            updateData.password = await bcrypt.hash(updateData.password, 10);
+        }
+        Object.assign(user, updateData);
+        const updatedUser = await this.userRepository.save(user);
+        delete updatedUser.password;
+        return updatedUser;
+    }
+    async findById(id) {
+        const user = await this.userRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new common_1.NotFoundException('Usuario no encontrado');
+        }
+        delete user.password;
+        return user;
     }
 };
 exports.UsersService = UsersService;

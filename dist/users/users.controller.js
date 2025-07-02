@@ -53,6 +53,10 @@ let UsersController = class UsersController {
         const allowed = body.permissions.every(p => this.service.canDo(request.user, p));
         return { allowed };
     }
+    async getProfile(request) {
+        const userId = request.user.id;
+        return this.service.findById(userId);
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -117,6 +121,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "canDoMultiple", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
+    (0, common_1.Get)('users/profile'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getProfile", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [users_service_1.UsersService, jwt_service_1.JwtService])
