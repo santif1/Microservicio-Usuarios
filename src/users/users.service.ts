@@ -32,6 +32,11 @@ export class UsersService {
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepository.find({})
   }
+
+  async findAllMails(): Promise<string[]> {
+    return (await this.userRepository.find({})).map(user => user.email);
+  }
+
   async refreshToken(refreshToken: string) {
     return this.jwtService.refreshToken(refreshToken);
   }

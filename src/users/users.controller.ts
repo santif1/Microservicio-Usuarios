@@ -26,10 +26,15 @@ export class UsersController {
   constructor(private service: UsersService, private readonly jwtService: JwtService, private readonly usersService: UsersService
    ) {}
 
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   @Get('users')
   async findAll() {
   return this.service.findAll();
+  }
+
+  @Get('users/mails')
+  async findAllMails() {
+    return this.service.findAllMails();
   }
 
   @Post('users/login')
