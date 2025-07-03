@@ -11,7 +11,6 @@ export declare class UsersController {
     private readonly usersService;
     constructor(service: UsersService, jwtService: JwtService, usersService: UsersService);
     findAll(): Promise<import("../entities/user.entity").UserEntity[]>;
-    findOne(email: string): Promise<import("../entities/user.entity").UserEntity>;
     login(body: LoginDTO): Promise<{
         accessToken: string;
         refreshToken: string;
@@ -37,5 +36,11 @@ export declare class UsersController {
         allowed: boolean;
     };
     getProfile(request: RequestWithUser): Promise<import("../entities/user.entity").UserEntity>;
-    updateProfile(request: RequestWithUser, updateProfileDto: UpdateUserProfileDto): Promise<import("../entities/user.entity").UserEntity>;
+    updateProfile(request: RequestWithUser, updateProfileDto: UpdateUserProfileDto): Promise<import("../entities/user.entity").UserEntity | {
+        user: import("../entities/user.entity").UserEntity;
+        access_token: string;
+        message: string;
+    }>;
+    checkEmailExists(email: string, excludeUserId?: string): Promise<boolean>;
+    findOne(email: string): Promise<import("../entities/user.entity").UserEntity>;
 }

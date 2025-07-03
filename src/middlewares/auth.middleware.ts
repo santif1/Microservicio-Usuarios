@@ -42,8 +42,12 @@ export class AuthGuard implements CanActivate {
       const hasPermission = permissions.some((perm)=> user.permissionCodes.includes(perm));
 
       if (!hasPermission) throw new UnauthorizedException('No tenes permiso para acceder a este recurso')
+      
+      return true; // ✅ AGREGAR ESTE RETURN QUE FALTA
+
 
     } catch (error) {
+      console.error('❌ Error en AuthGuard:', error);
       throw new UnauthorizedException(error?.message);
     }
   }

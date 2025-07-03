@@ -39,8 +39,10 @@ let AuthGuard = class AuthGuard {
             const hasPermission = permissions.some((perm) => user.permissionCodes.includes(perm));
             if (!hasPermission)
                 throw new common_1.UnauthorizedException('No tenes permiso para acceder a este recurso');
+            return true;
         }
         catch (error) {
+            console.error('❌ Error en AuthGuard:', error);
             throw new common_1.UnauthorizedException(error?.message);
         }
     }

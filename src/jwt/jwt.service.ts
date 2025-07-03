@@ -28,6 +28,10 @@ export class JwtService {
       expiresIn: this.config[type].expiresIn,
     });
   }
+  // Método específico para regenerar token con nuevo email
+  regenerateTokenWithNewEmail(email: string): string {
+    return this.generateToken({ email: email }, 'auth');
+  }
 
   refreshToken(refreshToken: string):{accessToken:string,refreshToken:string} {
     try {
