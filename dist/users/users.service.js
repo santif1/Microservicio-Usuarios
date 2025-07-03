@@ -50,8 +50,20 @@ let UsersService = class UsersService {
             const user = new user_entity_1.UserEntity();
             Object.assign(user, body);
             user.password = (0, bcrypt_1.hashSync)(user.password, 10);
-            await this.userRepository.save(user);
-            return { status: 'created' };
+            const savedUser = await this.userRepository.save(user);
+            const payload = { sub: savedUser.id, email: savedUser.email };
+            const accessToken = this.jwtService.generateToken(payload, 'auth');
+            const refreshToken = this.jwtService.generateToken(payload, 'refresh');
+            return {
+                status: 'created',
+                message: 'Usuario registrado correctamente',
+                accessToken,
+                refreshToken,
+                user: {
+                    id: savedUser.id,
+                    email: savedUser.email,
+                }
+            };
         }
         catch (error) {
             throw new common_1.HttpException('Error de creacion', 500);

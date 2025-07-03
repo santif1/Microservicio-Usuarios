@@ -21,6 +21,13 @@ export declare class UsersController {
     }>;
     register(body: RegisterDTO): Promise<{
         status: string;
+        message: string;
+        accessToken: string;
+        refreshToken: string;
+        user: {
+            id: number;
+            email: string;
+        };
     }>;
     canDo(request: RequestWithUser, permission: string): boolean;
     refreshToken(request: Request): {

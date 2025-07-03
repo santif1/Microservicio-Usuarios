@@ -19,6 +19,13 @@ export declare class UsersService {
     canDo(user: UserEntity, permission: string): boolean;
     register(body: RegisterDTO): Promise<{
         status: string;
+        message: string;
+        accessToken: string;
+        refreshToken: string;
+        user: {
+            id: number;
+            email: string;
+        };
     }>;
     login(body: LoginDTO): Promise<{
         accessToken: string;
