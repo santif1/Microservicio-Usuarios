@@ -12,7 +12,7 @@ import { hashSync, compareSync } from 'bcrypt';
 import { JwtService } from 'src/jwt/jwt.service';
 import * as dayjs from 'dayjs';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository, In, Not } from 'typeorm';
 import { RoleEntity } from '../entities/roles.entity';
 import { UpdateUserProfileDto } from 'src/dto/updateuser.dto'; // ajustar ruta
 import * as bcrypt from 'bcrypt';
@@ -158,5 +158,14 @@ export class UsersService {
     
     return updatedUser;
   }
+  async checkEmailExists(email: string, excludeUserId?: number): Promise<boolean> {
+  const whereCondition: any = { email };
+  
+  if (excludeUserId) {
+    whereCondition.id = Not(excludeUserId);
+  }
+  const user = await this.userRepository.findOne({ where: whereCondition });
+  return !!user;
+}
   
 }

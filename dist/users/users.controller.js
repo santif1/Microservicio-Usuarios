@@ -30,9 +30,6 @@ let UsersController = class UsersController {
     async findAll() {
         return this.service.findAll();
     }
-    async findOne(email) {
-        return this.service.findByEmail(email);
-    }
     login(body) {
         return this.service.login(body);
     }
@@ -59,7 +56,6 @@ let UsersController = class UsersController {
     async getProfile(request) {
         console.log('🔍 request.user completo:', request.user);
         console.log('🔍 request.user.id:', request.user?.id);
-        console.log('🔍 Tipo de request.user.id:', typeof request.user?.id);
         if (!request.user || !request.user.id) {
             throw new Error('Usuario no autenticado o ID faltante');
         }
@@ -68,16 +64,36 @@ let UsersController = class UsersController {
     }
     async updateProfile(request, updateProfileDto) {
         console.log('🔍 Datos a actualizar:', updateProfileDto);
+        console.log('🔍 request.user:', request.user);
+        if (!request.user || !request.user.id) {
+            throw new Error('Usuario no autenticado o ID faltante');
+        }
         const userId = request.user.id;
         try {
-            const updatedUser = await this.usersService.updateProfile(userId, updateProfileDto);
+            const updatedUser = await this.service.updateProfile(userId, updateProfileDto);
             console.log('✅ Usuario actualizado:', { id: updatedUser.id, email: updatedUser.email });
+            if (updateProfileDto.email && updateProfileDto.email !== request.user.email) {
+                const newToken = this.jwtService.generateToken({ email: updatedUser.email });
+                console.log('🔄 Email cambiado, generando nuevo token');
+                return {
+                    user: updatedUser,
+                    access_token: newToken,
+                    message: 'Perfil actualizado. Token renovado debido al cambio de email.'
+                };
+            }
             return updatedUser;
         }
         catch (error) {
             console.error('❌ Error actualizando perfil:', error);
             throw new Error('Error al actualizar perfil');
         }
+    }
+    async checkEmailExists(email, excludeUserId) {
+        const excludeId = excludeUserId ? parseInt(excludeUserId) : undefined;
+        return this.service.checkEmailExists(email, excludeId);
+    }
+    async findOne(email) {
+        return this.service.findByEmail(email);
     }
 };
 exports.UsersController = UsersController;
@@ -88,14 +104,6 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findAll", null);
-__decorate([
-    (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
-    (0, common_1.Get)('users/:email'),
-    __param(0, (0, common_1.Param)('email')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Post)('users/login'),
     __param(0, (0, common_1.Body)()),
@@ -160,6 +168,23 @@ __decorate([
     __metadata("design:paramtypes", [Object, updateuser_dto_1.UpdateUserProfileDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateProfile", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
+    (0, common_1.Get)('check-email/:email'),
+    __param(0, (0, common_1.Param)('email')),
+    __param(1, (0, common_1.Query)('excludeUserId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "checkEmailExists", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_middleware_1.AuthGuard),
+    (0, common_1.Get)('users/:email'),
+    __param(0, (0, common_1.Param)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "findOne", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [users_service_1.UsersService, jwt_service_1.JwtService, users_service_1.UsersService])

@@ -32,4 +32,5 @@ export declare class UsersService {
     findByEmail(email: string): Promise<UserEntity>;
     assignRole(id: number, roleIds: number[]): Promise<string>;
     updateProfile(userId: number, updateProfileDto: UpdateUserProfileDto): Promise<UserEntity>;
+    checkEmailExists(email: string, excludeUserId?: number): Promise<boolean>;
 }

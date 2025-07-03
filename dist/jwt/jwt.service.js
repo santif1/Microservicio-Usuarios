@@ -31,6 +31,9 @@ let JwtService = class JwtService {
             expiresIn: this.config[type].expiresIn,
         });
     }
+    regenerateTokenWithNewEmail(email) {
+        return this.generateToken({ email: email }, 'auth');
+    }
     refreshToken(refreshToken) {
         try {
             const payload = this.getPayload(refreshToken, 'refresh');

@@ -116,6 +116,14 @@ let UsersService = class UsersService {
         console.log('✅ Usuario actualizado exitosamente');
         return updatedUser;
     }
+    async checkEmailExists(email, excludeUserId) {
+        const whereCondition = { email };
+        if (excludeUserId) {
+            whereCondition.id = (0, typeorm_2.Not)(excludeUserId);
+        }
+        const user = await this.userRepository.findOne({ where: whereCondition });
+        return !!user;
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
