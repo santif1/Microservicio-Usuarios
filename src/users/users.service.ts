@@ -53,8 +53,24 @@ export class UsersService {
       const user = new UserEntity();
       Object.assign(user, body);
       user.password = hashSync(user.password, 10);
-      await this.userRepository.save(user);
-      return { status: 'created' };
+
+      const savedUser =await this.userRepository.save(user);
+
+      const payload = { sub: savedUser.id, email: savedUser.email };
+      const accessToken = this.jwtService.generateToken(payload, 'auth');
+      const refreshToken = this.jwtService.generateToken(payload, 'refresh');
+    
+      return {
+        status: 'created',
+        message: 'Usuario registrado correctamente',
+        accessToken,
+        refreshToken,
+        user: {
+          id: savedUser.id,
+          email: savedUser.email,
+        }
+      };
+        
     } catch (error) {
       throw new HttpException('Error de creacion', 500);
     }
@@ -78,7 +94,6 @@ export class UsersService {
       user: {
       id: user.id,
       email: user.email,
-      // agregar otros campos que necesites
     }
     };
   }

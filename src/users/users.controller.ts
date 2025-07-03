@@ -45,6 +45,8 @@ export class UsersController {
   register(@Body() body: RegisterDTO) {
     return this.service.register(body);
   }
+
+  
   @UseGuards(AuthGuard)
   @Get('can-do/:permission')
   canDo(
