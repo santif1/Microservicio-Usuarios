@@ -1,14 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { sign, verify } from 'jsonwebtoken';
+import { sign, verify, JwtPayload } from 'jsonwebtoken';
 import * as dayjs from 'dayjs';
 import { Payload } from 'src/interfaces/payload';
 
-
 @Injectable()
 export class JwtService {
-  constructor() {
-    
-  }
+  constructor() {}
+
   // config.ts
   config = {
     auth: {
@@ -20,6 +18,7 @@ export class JwtService {
       expiresIn: '1d',
     },
   };
+
   generateToken(
     payload: { email: string },
     type: 'refresh' | 'auth' = 'auth',
@@ -29,17 +28,18 @@ export class JwtService {
     });
   }
 
-  refreshToken(refreshToken: string):{accessToken:string,refreshToken:string} {
+  refreshToken(refreshToken: string): { accessToken: string; refreshToken: string } {
     try {
-      const payload = this.getPayload(refreshToken,'refresh')
+      const payload = this.getPayload(refreshToken, 'refresh');
       // Obtiene el tiempo restante en minutos hasta la expiración
       const timeToExpire = dayjs.unix(payload.exp).diff(dayjs(), 'minute');
+
       return {
         accessToken: this.generateToken({ email: payload.email }),
         refreshToken:
           timeToExpire < 20
             ? this.generateToken({ email: payload.email }, 'refresh')
-            : refreshToken
+            : refreshToken,
       };
     } catch (error) {
       throw new UnauthorizedException();
@@ -47,6 +47,12 @@ export class JwtService {
   }
 
   getPayload(token: string, type: 'refresh' | 'auth' = 'auth'): Payload {
-    return verify(token, this.config[type].secret);
+    const decoded = verify(token, this.config[type].secret);
+
+    if (typeof decoded === 'string') {
+      throw new UnauthorizedException('Invalid JWT payload');
+    }
+
+    return decoded as Payload;
   }
 }
